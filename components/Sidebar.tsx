@@ -16,8 +16,11 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import FreeCounter from "./FreeCounter";
 
-type Props = {};
+type Props = {
+  apiLimitCount: number;
+};
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "600"] });
 
@@ -65,7 +68,7 @@ const routes = [
   },
 ];
 
-const Sidebar = (props: Props) => {
+const Sidebar: React.FC<Props> = ({ apiLimitCount }) => {
   const pathname = usePathname();
 
   return (
@@ -98,6 +101,7 @@ const Sidebar = (props: Props) => {
           ))}
         </div>
       </div>
+      <FreeCounter apiLimitCount={apiLimitCount} />
     </div>
   );
 };
