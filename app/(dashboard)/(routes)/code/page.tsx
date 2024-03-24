@@ -20,10 +20,12 @@ import Empty from "@/components/Empty";
 import Loader from "@/components/Loader";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
+import { useProModal } from "@/hooks/useProModal";
 
 type Props = {};
 
 const CodePage = (props: Props) => {
+  const proModal = useProModal();
   const router = useRouter();
   const [messages, setMessages] = useState<any[]>([]);
 
@@ -47,9 +49,10 @@ const CodePage = (props: Props) => {
       });
       setMessages((current) => [...current, userMessage, response.data]);
       form.reset();
-    } catch (error) {
-      // TODO: OPEN Pro Model
-      console.log("[CODE_ERROR]", error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

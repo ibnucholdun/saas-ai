@@ -32,10 +32,12 @@ import {
 } from "@/components/ui/select";
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
+import { useProModal } from "@/hooks/useProModal";
 
 type Props = {};
 
 const ImagePage = (props: Props) => {
+  const proModal = useProModal();
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
   const form = useForm<z.infer<typeof conversationFormSchema>>({
@@ -57,9 +59,10 @@ const ImagePage = (props: Props) => {
 
       setImages(urls);
       form.reset();
-    } catch (error) {
-      // TODO: OPEN Pro Model
-      console.log("[IMAGE_ERROR]", error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }
