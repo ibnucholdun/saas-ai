@@ -1,21 +1,31 @@
 "use client";
 
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import * as z from "zod";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import Heading from "@/components/Heading";
+import { cn } from "@/lib/utils";
 
 import { conversationFormSchema } from "./constants";
+
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import Heading from "@/components/Heading";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Empty from "@/components/Empty";
+import Loader from "@/components/Loader";
+import UserAvatar from "@/components/UserAvatar";
+import BotAvatar from "@/components/BotAvatar";
 
 type Props = {};
 
 const ConservationPage = (props: Props) => {
+  const router = useRouter();
+  const [messages, setMessages] = useState<any[]>([]);
+
   const form = useForm<z.infer<typeof conversationFormSchema>>({
     resolver: zodResolver(conversationFormSchema),
     defaultValues: {
@@ -25,9 +35,24 @@ const ConservationPage = (props: Props) => {
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof conversationFormSchema>) => {
-    console.log(values);
+    try {
+      const userMessage: any = {
+        role: "user",
+        content: values.prompt,
+      };
+      const newMessage = [...messages, userMessage];
+      const response = await axios.post("/api/conversation", {
+        messages: newMessage,
+      });
+      setMessages((current) => [...current, userMessage, response.data]);
+      form.reset();
+    } catch (error) {
+      // TODO: OPEN Pro Model
+      console.log("[CONSERVATION_ERROR]", error);
+    } finally {
+      router.refresh();
+    }
   };
-
   return (
     <div>
       <Heading
@@ -60,13 +85,38 @@ const ConservationPage = (props: Props) => {
               />
               <Button
                 className="col-span-12 lg:col-span-2 w-full"
-                disabled={isLoading}>
+                disabled={isLoading}
+                type="submit">
                 Generate
               </Button>
             </form>
           </Form>
         </div>
-        <div className="space-y-4 mt-4">Message Content</div>
+        <div className="space-y-4 mt-4">
+          {isLoading && (
+            <div className="p-8 rounded-lg w-full flex items-cecntere justify-center bg-muted">
+              <Loader />
+            </div>
+          )}
+          {messages.length === 0 && !isLoading && (
+            <Empty label="No Conversation started" />
+          )}
+          <div className="flex flex-col-reverse gap-y-4">
+            {messages.map((message, index) => (
+              <div
+                className={cn(
+                  message.role === "user"
+                    ? "bg-white border border-black/10"
+                    : "bg-muted",
+                  "p-8 w-full flex items-start gap-x-8 rounded-lg"
+                )}
+                key={message.content}>
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                <p className="text-sm">{message.content}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
