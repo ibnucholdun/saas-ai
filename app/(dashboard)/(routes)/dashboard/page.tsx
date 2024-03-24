@@ -56,7 +56,7 @@ const tools = [
 const DashboardPage = (props: Props) => {
   const router = useRouter();
   return (
-    <div>
+    <>
       <div className="mb-8 space-y-4">
         <h2 className="text-2xl font-bold md:text-4xl text-center">
           Explore the power of AI
@@ -81,7 +81,7 @@ const DashboardPage = (props: Props) => {
           </Card>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
