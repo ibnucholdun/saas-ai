@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogHeader,
@@ -23,6 +23,7 @@ import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import axios from "axios";
 
 type Props = {};
 
@@ -66,6 +67,20 @@ const tools = [
 
 const ProModal = (props: Props) => {
   const proModal = useProModal();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubcribe = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("/api/stripe");
+
+      window.location.href = (await response).data.url;
+    } catch (error) {
+      console.log("[STRIPE_CLIENT_ERROR]", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <Dialog open={proModal.isOpen} onOpenChange={proModal.onClose}>
       <DialogContent>
@@ -95,7 +110,11 @@ const ProModal = (props: Props) => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button size={"lg"} variant={"premium"} className="w-full">
+          <Button
+            onClick={onSubcribe}
+            size={"lg"}
+            variant={"premium"}
+            className="w-full">
             Upgrade <Zap className="w-4 h-4 ml-2 fill-white" />
           </Button>
         </DialogFooter>

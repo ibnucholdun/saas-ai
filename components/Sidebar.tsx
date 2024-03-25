@@ -20,6 +20,7 @@ import FreeCounter from "./FreeCounter";
 
 type Props = {
   apiLimitCount: number;
+  isPro?: boolean;
 };
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "600"] });
@@ -68,7 +69,7 @@ const routes = [
   },
 ];
 
-const Sidebar: React.FC<Props> = ({ apiLimitCount }) => {
+const Sidebar: React.FC<Props> = ({ apiLimitCount = 0, isPro = false }) => {
   const pathname = usePathname();
 
   return (
@@ -101,7 +102,7 @@ const Sidebar: React.FC<Props> = ({ apiLimitCount }) => {
           ))}
         </div>
       </div>
-      <FreeCounter apiLimitCount={apiLimitCount} />
+      <FreeCounter apiLimitCount={apiLimitCount} isPro={isPro} />
     </div>
   );
 };

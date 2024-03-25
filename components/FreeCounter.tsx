@@ -10,9 +10,10 @@ import { useProModal } from "@/hooks/useProModal";
 
 type Props = {
   apiLimitCount: number;
+  isPro?: boolean;
 };
 
-const FreeCounter: React.FC<Props> = ({ apiLimitCount = 0 }) => {
+const FreeCounter: React.FC<Props> = ({ apiLimitCount = 0, isPro = false }) => {
   const proModal = useProModal();
   const [mounted, setMounted] = useState(false);
 
@@ -21,6 +22,10 @@ const FreeCounter: React.FC<Props> = ({ apiLimitCount = 0 }) => {
   }, []);
 
   if (!mounted) {
+    return null;
+  }
+
+  if (isPro) {
     return null;
   }
   return (

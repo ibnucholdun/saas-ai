@@ -8,11 +8,14 @@ import Sidebar from "./Sidebar";
 
 type Props = {
   apiLimitCount: number;
+  isPro?: boolean;
 };
 
-const MobileSidebar: React.FC<Props> = ({ apiLimitCount }) => {
+const MobileSidebar: React.FC<Props> = ({
+  apiLimitCount = 0,
+  isPro = false,
+}) => {
   const [isMounted, setIsMounted] = useState(false);
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -27,7 +30,7 @@ const MobileSidebar: React.FC<Props> = ({ apiLimitCount }) => {
         </Button>
       </SheetTrigger>
       <SheetContent side={"left"} className="p-0">
-        <Sidebar apiLimitCount={apiLimitCount} />
+        <Sidebar apiLimitCount={apiLimitCount} isPro={isPro} />
       </SheetContent>
     </Sheet>
   );
