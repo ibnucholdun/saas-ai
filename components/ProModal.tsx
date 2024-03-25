@@ -24,6 +24,7 @@ import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -76,7 +77,7 @@ const ProModal = (props: Props) => {
 
       window.location.href = (await response).data.url;
     } catch (error) {
-      console.log("[STRIPE_CLIENT_ERROR]", error);
+      toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -112,6 +113,7 @@ const ProModal = (props: Props) => {
         <DialogFooter>
           <Button
             onClick={onSubcribe}
+            disabled={isLoading}
             size={"lg"}
             variant={"premium"}
             className="w-full">
