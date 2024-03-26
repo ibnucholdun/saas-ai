@@ -31,20 +31,6 @@ const tools = [
     href: "/image",
   },
   {
-    label: "Video Generation",
-    icon: VideoIcon,
-    color: "text-orange-500",
-    bgColor: "bg-orange-200",
-    href: "/video",
-  },
-  {
-    label: "Music Generation",
-    icon: Music,
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-200",
-    href: "/music",
-  },
-  {
     label: "Code Generation",
     icon: Code,
     color: "text-green-500",
